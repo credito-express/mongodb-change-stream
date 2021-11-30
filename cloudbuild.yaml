@@ -21,9 +21,9 @@ steps:
     waitFor: [ 'docker_push' ]
 timeout: 1800s
 images:
-  - '$_LOCATION-docker.pkg.dev/$PROJECT_ID/services/$_SERVICE_NAME:latest'
+  - '$_LOCATION-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_ID}/$_SERVICE_NAME:latest'
 substitutions:
-  _DOCKER_TAG_BASE: "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/services/${_SERVICE_NAME}"
+  _DOCKER_TAG_BASE: "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_ID}/${_SERVICE_NAME}"
   _DOCKER_TAG: "${_DOCKER_TAG_BASE}:${COMMIT_SHA}"
   _DOCKER_TAG_LATEST: "${_DOCKER_TAG_BASE}:latest"
 options:
