@@ -16,7 +16,9 @@ steps:
         "compute",
         "instances",
         "reset",
-        "$_INSTANCE_NAME"
+        "$_INSTANCE_NAME",
+        "--zone",
+        "$_INSTANCE_ZONE"
       ]
     waitFor: [ 'docker_push' ]
 timeout: 1800s
@@ -26,5 +28,6 @@ substitutions:
   _DOCKER_TAG_BASE: "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_ID}/${_SERVICE_NAME}"
   _DOCKER_TAG: "${_DOCKER_TAG_BASE}:${COMMIT_SHA}"
   _DOCKER_TAG_LATEST: "${_DOCKER_TAG_BASE}:latest"
+  _INSTANCE_ZONE: "${_LOCATION}-a"
 options:
   substitution_option: 'ALLOW_LOOSE'
