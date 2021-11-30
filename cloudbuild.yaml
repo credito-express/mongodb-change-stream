@@ -1,0 +1,30 @@
+steps:
+  - id: "docker_build"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "$_DOCKER_TAG", "-t", "$_DOCKER_TAG_LATEST", "--cache-from", "$_DOCKER_TAG_LATEST", "."]
+
+  - id: "docker_push"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["push", "$_DOCKER_TAG_BASE"]
+    waitFor: [ 'docker_build' ]
+
+  - id: "instance reset"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    args:
+      [
+        "gcloud",
+        "compute",
+        "instances",
+        "reset",
+        "$_INSTANCE_NAME"
+      ]
+    waitFor: [ 'docker_push' ]
+timeout: 1800s
+images:
+  - '$_LOCATION-docker.pkg.dev/$PROJECT_ID/services/$_SERVICE_NAME:latest'
+substitutions:
+  _DOCKER_TAG_BASE: "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/services/${_SERVICE_NAME}"
+  _DOCKER_TAG: "${_DOCKER_TAG_BASE}:${COMMIT_SHA}"
+  _DOCKER_TAG_LATEST: "${_DOCKER_TAG_BASE}:latest"
+options:
+  substitution_option: 'ALLOW_LOOSE'
