@@ -42,7 +42,7 @@ class CursorMongo(multiprocessing.Process):
 
 
 class ConnectionValidator:
-    def __init__(self, db_url, environment, *agrs, **kwargs):
+    def __init__(self, db_url, environment):
         self.db_url = db_url
         self.environment = environment
 
@@ -79,7 +79,6 @@ if __name__ == "__main__":
     BUCKET_NAME = env["BUCKET"]
     storage_client = storage.Client()
     bucket = storage_client.bucket(BUCKET_NAME)
-    input_process_data = []
     collections_to_stream = env["COLLECTIONS"]
 
     streams = [
@@ -89,7 +88,7 @@ if __name__ == "__main__":
 
     [s.start() for s in streams]
 
-    connection_validator = ConnectionValidator(*input_process_data)
+    connection_validator = ConnectionValidator(MONGODB_URL, env["ENV"])
     while True:
         try:
             connection_validator.run()
