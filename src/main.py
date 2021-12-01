@@ -11,7 +11,7 @@ from pymongo import MongoClient
 
 
 def get_date_name():
-    return datetime.utcnow().isoformat().split(".")[0]
+    return datetime.utcnow().isoformat().replace(".", "_")
 
 
 class CursorMongo(multiprocessing.Process):
